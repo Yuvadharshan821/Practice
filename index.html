@@ -4,6 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Hotel Dharshan - Food Menu</title>
+
+<meta name="description" content="Hotel Dharshan's delicious South Indian and Fast Food menu. Check out our tasty tiffin and lunch options." />
+<meta property="og:title" content="Hotel Dharshan Food Menu" />
+<meta property="og:description" content="Explore our menu with crispy dosas, flavorful rice dishes, and more." />
+<meta property="og:type" content="website" />
+
 <style>
   @keyframes loadingSpin {
     0% { transform: rotate(0deg); }
@@ -21,20 +27,21 @@
     left: 50%;
     margin: -30px 0 0 -30px;
     z-index: 9999;
+    transition: opacity 0.5s ease;
     background: transparent;
   }
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(-45deg, #0b0000, #4b1a0a, #8a0000, #4b1a0a);
+    background: linear-gradient(-45deg, #1a0000, #330a0a, #660b0b, #4b0000);
     background-size: 400% 400%;
-    animation: backgroundGradient 20s ease infinite;
+    animation: bgAnim 20s ease infinite;
     color: white;
     margin: 0;
     padding: 20px;
     min-height: 100vh;
-    overflow-x: hidden;
+    position: relative;
   }
-  @keyframes backgroundGradient {
+  @keyframes bgAnim {
     0% {background-position: 0% 50%;}
     50% {background-position: 100% 50%;}
     100% {background-position: 0% 50%;}
@@ -61,6 +68,10 @@
     margin: 0 10px;
     transition: all 0.3s;
     user-select: none;
+  }
+  .tab:focus {
+    outline: 2px solid #1DB954;
+    outline-offset: 2px;
   }
   .tab.active {
     color: #1DB954;
@@ -92,6 +103,13 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    transition: transform 0.3s ease;
+  }
+  .menu-item:hover,
+  .menu-item:focus {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(29, 185, 84, 0.7);
+    outline: none;
   }
   .menu-img {
     width: 100%;
@@ -103,12 +121,14 @@
   .menu-name {
     font-weight: bold;
     font-size: 18px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    color: #e1f5e1;
   }
   .menu-description {
     font-size: 14px;
     color: #bbb;
     margin-bottom: 8px;
+    min-height: 40px;
   }
   .menu-price {
     color: #1DB954;
@@ -121,173 +141,183 @@
     font-size: 16px;
     color: #bbb;
   }
-  #noResults {
-    text-align: center;
-    color: #ff4d4d;
-    font-size: 18px;
-    margin-top: 20px;
-    display: none;
+  /* Responsive */
+  @media (max-width: 600px) {
+    .menu-grid {
+      grid-template-columns: 1fr !important;
+    }
   }
+  @media (min-width: 601px) and (max-width: 900px) {
+    .menu-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Back to top button */
   #backToTop {
     position: fixed;
     bottom: 30px;
     right: 30px;
     background: #1DB954;
-    border: none;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    font-size: 24px;
     color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 50%;
     cursor: pointer;
+    font-size: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
     display: none;
-    box-shadow: 0 4px 10px rgba(29, 185, 84, 0.7);
-    transition: background 0.3s ease;
     z-index: 999;
   }
   #backToTop:hover {
-    background: #17a04a;
+    opacity: 1;
   }
 </style>
 </head>
 <body>
-<div id="loading"></div>
+<div id="loading" aria-label="Loading content"></div>
 
-<div class="restaurant-info" role="banner" aria-label="Restaurant Information">
+<div class="restaurant-info" role="banner">
   <h2>Hotel Dharshan</h2>
-  <p>South Indian, Fast Food</p>
-  <p>⭐ 4.3 | Kandhukuru - PTM Road, Andhra Pradesh | ₹100 for two</p>
+  <p>South Indian</p>
+  <p>⭐ 4.3 | Kandhukuru - PTM Road | ₹100 for two</p>
+  <p><strong>Opening Hours:</strong> 7:00 AM to 4:30 PM</p>
   <marquee behavior="scroll" direction="left" scrollamount="6" style="color:#1DB954; font-weight:bold; margin-top:10px;">
-    Opening Time: 7:00 AM to 4:30 PM
+    Welcome to Hotel Dharshan! Enjoy fresh, delicious meals every day!
   </marquee>
 </div>
 
 <div class="tab-nav" role="tablist" aria-label="Menu Categories">
-  <div class="tab active" id="tabTiffin" role="tab" aria-selected="true" tabindex="0">Tiffin</div>
-  <div class="tab" id="tabLunch" role="tab" aria-selected="false" tabindex="-1">Lunch</div>
+  <div class="tab active" id="tabTiffin" role="tab" tabindex="0" aria-selected="true" aria-controls="tiffinMenu">Tiffin</div>
+  <div class="tab" id="tabLunch" role="tab" tabindex="-1" aria-selected="false" aria-controls="lunchMenu">Lunch</div>
 </div>
 
 <input type="text" id="searchBox" aria-label="Search menu items" placeholder="Search items..." />
 
 <div id="menuContainer">
-  <div id="tiffinMenu" class="menu-grid" role="tabpanel" aria-labelledby="tabTiffin">
-    <div class="menu-item">
-      <img src="b.jpg" class="menu-img" alt="Masala Dosa" />
+  <section id="tiffinMenu" class="menu-grid" role="tabpanel" aria-labelledby="tabTiffin">
+    <article class="menu-item" tabindex="0">
+      <img src="b.jpg" alt="Masala Dosa" class="menu-img" loading="lazy" />
       <div class="menu-name">Masala Dosa</div>
-      <div class="menu-description">Spiced potato-filled crispy dosa</div>
+      <div class="menu-description">Crispy dosa stuffed with spicy potato filling.</div>
       <div class="menu-price">₹30</div>
-    </div>
-    <div class="menu-item">
-      <img src="egg.jpg" class="menu-img" alt="Egg Dosa" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="egg.jpg" alt="Egg Dosa" class="menu-img" loading="lazy" />
       <div class="menu-name">Egg Dosa</div>
-      <div class="menu-description">Dosa with egg filling</div>
+      <div class="menu-description">Dosa topped with a flavorful omelette.</div>
       <div class="menu-price">₹40</div>
-    </div>
-    <div class="menu-item">
-      <img src="O.jpeg" class="menu-img" alt="Onion Dosa" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="O.jpeg" alt="Onion Dosa" class="menu-img" loading="lazy" />
       <div class="menu-name">Onion Dosa</div>
-      <div class="menu-description">Crispy dosa with onions</div>
+      <div class="menu-description">Dosa with caramelized onions and spices.</div>
       <div class="menu-price">₹40</div>
-    </div>
-    <div class="menu-item">
-      <img src="a.jpeg" class="menu-img" alt="Paneer Dosa" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="a.jpeg" alt="Paneer Dosa" class="menu-img" loading="lazy" />
       <div class="menu-name">Paneer Dosa</div>
-      <div class="menu-description">Dosa with cottage cheese filling</div>
+      <div class="menu-description">Dosa filled with soft paneer cubes.</div>
       <div class="menu-price">₹40</div>
-    </div>
-    <div class="menu-item">
-      <img src="e1.jpg" class="menu-img" alt="Ghee Dosa" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="e1.jpg" alt="Ghee Dosa" class="menu-img" loading="lazy" />
       <div class="menu-name">Ghee Dosa</div>
-      <div class="menu-description">Dosa made with ghee for richness</div>
+      <div class="menu-description">Dosa made with generous ghee for rich flavor.</div>
       <div class="menu-price">₹40</div>
-    </div>
-    <div class="menu-item">
-      <img src="set.jpg" class="menu-img" alt="Set Dosa" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="set.jpg" alt="Set Dosa" class="menu-img" loading="lazy" />
       <div class="menu-name">Set Dosa</div>
-      <div class="menu-description">Multiple dosas served together</div>
+      <div class="menu-description">Soft set of dosas served with chutney and sambar.</div>
       <div class="menu-price">₹70</div>
-    </div>
-    <div class="menu-item">
-      <img src="idly.jpg" class="menu-img" alt="Idly" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="idly.jpg" alt="Idly" class="menu-img" loading="lazy" />
       <div class="menu-name">Idly</div>
-      <div class="menu-description">Soft steamed rice cakes</div>
+      <div class="menu-description">Steamed rice cakes, served with sambar and chutney.</div>
       <div class="menu-price">₹40</div>
-    </div>
-    <div class="menu-item">
-      <img src="l.jpeg" class="menu-img" alt="Lemon Rice" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="l.jpeg" alt="Lemon Rice" class="menu-img" loading="lazy" />
       <div class="menu-name">Lemon Rice</div>
-      <div class="menu-description">Tangy and spicy rice dish</div>
+      <div class="menu-description">Tangy lemon flavored rice with mustard seeds.</div>
       <div class="menu-price">₹40</div>
-    </div>
-    <div class="menu-item">
-      <img src="kush.jpg" class="menu-img" alt="Kushka" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="kush.jpg" alt="Kushka" class="menu-img" loading="lazy" />
       <div class="menu-name">Kushka</div>
-      <div class="menu-description">Flavored biryani rice</div>
+      <div class="menu-description">Aromatic spiced rice dish with mild flavors.</div>
       <div class="menu-price">₹50</div>
-    </div>
-    <div class="menu-item">
-      <img src="palav.jpeg" class="menu-img" alt="Pulav" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="palav.jpeg" alt="Pulav" class="menu-img" loading="lazy" />
       <div class="menu-name">Pulav</div>
-      <div class="menu-description">Rice with vegetables and spices</div>
+      <div class="menu-description">Fragrant rice cooked with spices and vegetables.</div>
       <div class="menu-price">₹60</div>
-    </div>
-    <div class="menu-item">
-      <img src="t.jpeg" class="menu-img" alt="Tomato Rice" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="t.jpeg" alt="Tomato Rice" class="menu-img" loading="lazy" />
       <div class="menu-name">Tomato Rice</div>
-      <div class="menu-description">Rice cooked with tomatoes</div>
+      <div class="menu-description">Rice cooked with tomato puree and spices.</div>
       <div class="menu-price">₹50</div>
-    </div>
-    <div class="menu-item">
-      <img src="pongal.jpg" class="menu-img" alt="Pongal Plate" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="pongal.jpg" alt="Pongal Plate" class="menu-img" loading="lazy" />
       <div class="menu-name">Pongal Plate</div>
-      <div class="menu-description">Savory rice and lentil dish</div>
+      <div class="menu-description">Creamy rice and lentil dish, served hot.</div>
       <div class="menu-price">₹40</div>
-    </div>
-  </div>
+    </article>
+  </section>
 
-  <div id="lunchMenu" class="menu-grid" role="tabpanel" aria-labelledby="tabLunch" style="display:none;">
-    <div class="menu-item">
-      <img src="chapathi.jpeg" class="menu-img" alt="Chapathi Plate" />
+  <section id="lunchMenu" class="menu-grid" style="display:none;" role="tabpanel" aria-labelledby="tabLunch">
+    <article class="menu-item" tabindex="0">
+      <img src="chapathi.jpeg" alt="Chapathi Plate" class="menu-img" loading="lazy" />
       <div class="menu-name">Chapathi Plate</div>
-      <div class="menu-description">Chapathi with vegetable curry</div>
+      <div class="menu-description">Soft chapathis served with curry and chutney.</div>
       <div class="menu-price">₹50</div>
-    </div>
-    <div class="menu-item">
-      <img src="porato.jpeg" class="menu-img" alt="Parota" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="porato.jpeg" alt="Parota" class="menu-img" loading="lazy" />
       <div class="menu-name">Parota</div>
-      <div class="menu-description">Flaky layered flatbread</div>
+      <div class="menu-description">Flaky layered bread served with curry.</div>
       <div class="menu-price">₹50</div>
-    </div>
-    <div class="menu-item">
-      <img src="om.jpeg" class="menu-img" alt="Omelette" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="om.jpeg" alt="Omelette" class="menu-img" loading="lazy" />
       <div class="menu-name">Omelette</div>
-      <div class="menu-description">Egg omelette with spices</div>
+      <div class="menu-description">Fluffy omelette cooked with spices and veggies.</div>
       <div class="menu-price">₹30</div>
-    </div>
-    <div class="menu-item">
-      <img src="bj.jpg" class="menu-img" alt="Lunch Plate" />
+    </article>
+    <article class="menu-item" tabindex="0">
+      <img src="bj.jpg" alt="Lunch Plate" class="menu-img" loading="lazy" />
       <div class="menu-name">Lunch Plate</div>
-      <div class="menu-description">Rice, curry, and sides</div>
+      <div class="menu-description">Rice, sambar, curry, and vegetable combo.</div>
       <div class="menu-price">₹60</div>
-    </div>
-  </div>
-  <div id="noResults">No items found matching your search.</div>
+    </article>
+  </section>
 </div>
+
+<p id="noResults" style="display:none; text-align:center; color:#ccc;">No matching items found.</p>
 
 <div class="address-contact" role="contentinfo">
   <p><strong>Contact:</strong> 7671004973</p>
-  <p><strong>Address:</strong> Kandhukuru, PTM Road, Andhra Pradesh</p>
+  <p><strong>Address:</strong> Kandhukuru - PTM Road,Andra Pradesh</p>
 </div>
 
 <button id="backToTop" aria-label="Back to top">&#8679;</button>
 
 <script>
+  // Loader fade out
   window.addEventListener('load', () => {
     const loader = document.getElementById('loading');
     loader.style.opacity = '0';
     setTimeout(() => loader.style.display = 'none', 600);
   });
 
+  // Tabs switching
   const tabs = document.querySelectorAll('.tab');
   const tiffinMenu = document.getElementById('tiffinMenu');
   const lunchMenu = document.getElementById('lunchMenu');
@@ -297,55 +327,77 @@
       tabs.forEach(t => {
         t.classList.remove('active');
         t.setAttribute('aria-selected', 'false');
-        t.tabIndex = -1;
+        t.setAttribute('tabindex', '-1');
       });
       tab.classList.add('active');
       tab.setAttribute('aria-selected', 'true');
-      tab.tabIndex = 0;
-      if(tab.id === 'tabTiffin') {
+      tab.setAttribute('tabindex', '0');
+
+      if (tab.id === 'tabTiffin') {
         tiffinMenu.style.display = 'grid';
         lunchMenu.style.display = 'none';
       } else {
-        lunchMenu.style.display = 'grid';
         tiffinMenu.style.display = 'none';
+        lunchMenu.style.display = 'grid';
       }
       document.getElementById('searchBox').value = '';
       filterMenu('');
-      document.getElementById('noResults').style.display = 'none';
     });
   });
 
-  const searchBox = document.getElementById('searchBox');
-  searchBox.addEventListener('input', () => {
-    filterMenu(searchBox.value.trim().toLowerCase());
+  // Keyboard arrow navigation for tabs
+  document.querySelector('.tab-nav').addEventListener('keydown', e => {
+    const active = document.activeElement;
+    if (!active.classList.contains('tab')) return;
+
+    let newIndex;
+    const currentIndex = Array.from(tabs).indexOf(active);
+
+    if (e.key === 'ArrowRight') {
+      newIndex = (currentIndex + 1) % tabs.length;
+      tabs[newIndex].focus();
+      tabs[newIndex].click();
+      e.preventDefault();
+    } else if (e.key === 'ArrowLeft') {
+      newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+      tabs[newIndex].focus();
+      tabs[newIndex].click();
+      e.preventDefault();
+    }
   });
 
-  function filterMenu(searchTerm) {
-    let activeMenu = document.querySelector('.tab.active').id === 'tabTiffin' ? tiffinMenu : lunchMenu;
-    const items = activeMenu.querySelectorAll('.menu-item');
-    let found = false;
-    items.forEach(item => {
+  // Search filter
+  const searchBox = document.getElementById('searchBox');
+  const menuContainer = document.getElementById('menuContainer');
+  const noResults = document.getElementById('noResults');
+
+  searchBox.addEventListener('input', () => {
+    filterMenu(searchBox.value.toLowerCase());
+  });
+
+  function filterMenu(query) {
+    let anyVisible = false;
+    const visibleSection = tiffinMenu.style.display !== 'none' ? tiffinMenu : lunchMenu;
+    visibleSection.querySelectorAll('.menu-item').forEach(item => {
       const name = item.querySelector('.menu-name').textContent.toLowerCase();
       const desc = item.querySelector('.menu-description').textContent.toLowerCase();
-      if(name.includes(searchTerm) || desc.includes(searchTerm)) {
-        item.style.display = 'flex';
-        found = true;
-      } else {
-        item.style.display = 'none';
-      }
+      const match = name.includes(query) || desc.includes(query);
+      item.style.display = match ? 'flex' : 'none';
+      if (match) anyVisible = true;
     });
-    document.getElementById('noResults').style.display = found ? 'none' : 'block';
+    noResults.style.display = anyVisible ? 'none' : 'block';
   }
 
+  // Back to top button
   const backToTopBtn = document.getElementById('backToTop');
   window.addEventListener('scroll', () => {
-    backToTopBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+    backToTopBtn.style.display = window.pageYOffset > 300 ? 'block' : 'none';
   });
-
   backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({top: 0, behavior: 'smooth'});
   });
 </script>
 </body>
 </html>
+
 
