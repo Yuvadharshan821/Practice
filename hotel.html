@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Dharshan - Food Menu</title>
+<style>
+  @keyframes loadingSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  #loading {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    border: 6px solid #ccc;
+    border-top-color: #1DB954;
+    border-radius: 50%;
+    animation: loadingSpin 1s linear infinite;
+    top: 50%;
+    left: 50%;
+    margin: -30px 0 0 -30px;
+    z-index: 9999;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(-45deg, #000000, #654321, #8B0000, #000000);
+    background-size: 400% 400%;
+    animation: gradientBG 20s ease infinite;
+    color: white;
+    margin: 0;
+    padding: 20px;
+  }
+  .restaurant-info {
+    text-align: center;
+    color: #ddd;
+    margin-bottom: 30px;
+  }
+  .restaurant-info h2 {
+    color: #1DB954;
+    margin-bottom: 5px;
+  }
+  .tab-nav {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    color: #bbb;
+    border-bottom: 2px solid transparent;
+    margin: 0 10px;
+    transition: all 0.3s;
+  }
+  .tab.active {
+    color: #1DB954;
+    border-color: #1DB954;
+  }
+  #searchBox {
+    display: block;
+    margin: 10px auto 30px auto;
+    padding: 10px 15px;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+  }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 1000px;
+    margin: 0 auto 40px auto;
+  }
+  .menu-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .menu-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+  .menu-name {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .menu-price {
+    color: #1DB954;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .address-contact {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 16px;
+    color: #bbb;
+  }
+</style>
+</head>
+<body>
+<div id="loading"></div>
+
+<div class="restaurant-info">
+  <h2>Hotel Dharshan</h2>
+  <p>South Indian, Fast Food</p>
+  <p>⭐ 4.3 | Kandhukuru - PTM Road | ₹100 for two</p>
+</div>
+
+<div class="tab-nav">
+  <div class="tab active" id="tabTiffin">Tiffin</div>
+  <div class="tab" id="tabLunch">Lunch</div>
+</div>
+
+<input type="text" id="searchBox" placeholder="Search items...">
+
+<div id="menuContainer">
+  <div id="tiffinMenu" class="menu-grid">
+    <div class="menu-item"><img src="b.jpg" class="menu-img"><div class="menu-name">Masala Dosa</div><div class="menu-price">₹30</div></div>
+    <div class="menu-item"><img src="egg.jpg" class="menu-img"><div class="menu-name">Egg Dosa</div><div class="menu-price">₹40</div></div>
+    <div class="menu-item"><img src="O.jpeg" class="menu-img"><div class="menu-name">Onion Dosa</div><div class="menu-price">₹40</div></div>
+    <div class="menu-item"><img src="a.jpeg" class="menu-img"><div class="menu-name">Paneer Dosa</div><div class="menu-price">₹40</div></div>
+    <div class="menu-item"><img src="e1.jpg" class="menu-img"><div class="menu-name">Ghee Dosa</div><div class="menu-price">₹40</div></div>
+    <div class="menu-item"><img src="set.jpg" class="menu-img"><div class="menu-name">Set Dosa</div><div class="menu-price">₹70</div></div>
+    <div class="menu-item"><img src="idly.jpg" class="menu-img"><div class="menu-name">Idly</div><div class="menu-price">₹40</div></div>
+    <div class="menu-item"><img src="l.jpeg" class="menu-img"><div class="menu-name">Lemon Rice</div><div class="menu-price">₹40</div></div>
+    <div class="menu-item"><img src="kush.jpg" class="menu-img"><div class="menu-name">Kushka</div><div class="menu-price">₹50</div></div>
+    <div class="menu-item"><img src="palav.jpeg" class="menu-img"><div class="menu-name">Pulav</div><div class="menu-price">₹60</div></div>
+    <div class="menu-item"><img src="t.jpeg" class="menu-img"><div class="menu-name">Tomato Rice</div><div class="menu-price">₹50</div></div>
+    <div class="menu-item"><img src="pongal.jpg" class="menu-img"><div class="menu-name">Pongal Plate</div><div class="menu-price">₹40</div></div>
+  </div>
+
+  <div id="lunchMenu" class="menu-grid" style="display:none;">
+    <div class="menu-item"><img src="chapathi.jpeg" class="menu-img"><div class="menu-name">Chapathi Plate</div><div class="menu-price">₹50</div></div>
+    <div class="menu-item"><img src="porato.jpeg" class="menu-img"><div class="menu-name">Parota</div><div class="menu-price">₹50</div></div>
+    <div class="menu-item"><img src="om.jpeg" class="menu-img"><div class="menu-name">Omelette</div><div class="menu-price">₹30</div></div>
+    <div class="menu-item"><img src="bj.jpg" class="menu-img"><div class="menu-name">Lunch Plate</div><div class="menu-price">₹60</div></div>
+  </div>
+</div>
+
+<div class="address-contact">
+  <p><strong>Contact:</strong> 7671004973</p>
+  <p><strong>Address:</strong> Kandhukuru, PTM Road</p>
+</div>
+
+<script>
+  window.addEventListener('load', () => {
+    const loading = document.getElementById('loading');
+    loading.style.opacity = '0';
+    setTimeout(() => loading.style.display = 'none', 500);
+  });
+
+  const tabTiffin = document.getElementById('tabTiffin');
+  const tabLunch = document.getElementById('tabLunch');
+  const tiffinMenu = document.getElementById('tiffinMenu');
+  const lunchMenu = document.getElementById('lunchMenu');
+
+  tabTiffin.addEventListener('click', () => {
+    tiffinMenu.style.display = 'grid';
+    lunchMenu.style.display = 'none';
+    tabTiffin.classList.add('active');
+    tabLunch.classList.remove('active');
+  });
+
+  tabLunch.addEventListener('click', () => {
+    lunchMenu.style.display = 'grid';
+    tiffinMenu.style.display = 'none';
+    tabLunch.classList.add('active');
+    tabTiffin.classList.remove('active');
+  });
+
+  const searchBox = document.getElementById('searchBox');
+  searchBox.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    document.querySelectorAll('.menu-item').forEach(item => {
+      const name = item.querySelector('.menu-name').textContent.toLowerCase();
+      item.style.display = name.includes(query) ? 'flex' : 'none';
+    });
+  });
+</script>
+</body>
+</html>
